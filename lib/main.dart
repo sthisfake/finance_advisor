@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 // Removed unused imports after refactor
 import 'pages/home_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'pages/reports_page.dart';
 import 'pages/chatbot_page.dart';
 import 'pages/notifications_page.dart';
@@ -22,10 +23,18 @@ class FinanceAdvisorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Finance Advisor',
+  title: 'مشاور مالی',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      home: SplashWrapper(),
+  home: SplashWrapper(),
+      locale: const Locale('fa'),
+      supportedLocales: [const Locale('fa')],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // Remove global Directionality to fix bottom navigation bar position
     );
   }
 
@@ -84,7 +93,7 @@ class _SplashWrapperState extends State<SplashWrapper> with TickerProviderStateM
             SizedBox(height: 24),
             FadeTransition(
               opacity: _anim,
-              child: Text('Finance Advisor', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white70)),
+              child: Text('مشاور مالی', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white70)),
             )
           ],
         ),
@@ -124,7 +133,7 @@ class _MainShellState extends State<MainShell> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-  _pages = [HomePage(), ReportsPage(), ChatbotPage(), NotificationsPage(), SettingsPage()];
+    _pages = [HomePage(), ReportsPage(), ChatbotPage(), NotificationsPage(), SettingsPage()];
   }
 
   void _onTap(int idx) {
@@ -135,56 +144,70 @@ class _MainShellState extends State<MainShell> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: AnimatedSwitcher(
-        duration: Duration(milliseconds: 400),
-        child: _pages[_selectedIndex],
-        transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+      body: Stack(
+        children: [
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 400),
+            child: _pages[_selectedIndex],
+            transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _FloatingBottomNav(selectedIndex: _selectedIndex, onTap: _onTap),
+          ),
+        ],
       ),
-      bottomNavigationBar: _FloatingBottomNav(selectedIndex: _selectedIndex, onTap: _onTap),
     );
   }
 }
-
 class _FloatingBottomNav extends StatelessWidget {
   final int selectedIndex;
   final void Function(int) onTap;
   _FloatingBottomNav({required this.selectedIndex, required this.onTap});
 
+  final List<String> labels = const [
+    'خانه', 'گزارش‌ها', 'چت', 'اعلان‌ها', 'تنظیمات'
+  ];
+
   @override
   Widget build(BuildContext context) {
     final accent = Theme.of(context).primaryColor;
-    return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, bottom: 64),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: Color(0xFF0D1626),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 20, offset: Offset(0, 8))],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _NavIcon(icon: Icons.home_rounded, index: 0, selectedIndex: selectedIndex, onTap: onTap),
-          _NavIcon(icon: Icons.bar_chart_rounded, index: 1, selectedIndex: selectedIndex, onTap: onTap),
-
-          // center big chatbot button
-          GestureDetector(
-            onTap: () => onTap(2),
-            child: Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(colors: [accent, Theme.of(context).colorScheme.secondary]),
-                boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.secondary.withOpacity(0.32), blurRadius: 18, offset: Offset(0, 8))],
-              ),
-              child: Icon(Icons.chat_bubble_rounded, size: 36, color: Colors.white),
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: Color(0xFF0D1626),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [BoxShadow(color: Colors.black54, blurRadius: 20, offset: Offset(0, 8))],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _NavIcon(icon: Icons.home_rounded, index: 0, selectedIndex: selectedIndex, onTap: onTap, label: labels[0]),
+            _NavIcon(icon: Icons.bar_chart_rounded, index: 1, selectedIndex: selectedIndex, onTap: onTap, label: labels[1]),
+            GestureDetector(
+              onTap: () => onTap(2),
+              child: Column(children:[
+                Container(
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [accent, Theme.of(context).colorScheme.secondary]),
+                    boxShadow: [BoxShadow(color: Theme.of(context).colorScheme.secondary.withOpacity(0.32), blurRadius: 18, offset: Offset(0, 8))],
+                  ),
+                  child: Icon(Icons.chat_bubble_rounded, size: 36, color: Colors.white),
+                ),
+                Text(labels[2], style: TextStyle(color: selectedIndex==2?accent:Colors.white54, fontSize: 12))
+              ]),
             ),
-          ),
-
-          _NavIcon(icon: Icons.notifications_rounded, index: 3, selectedIndex: selectedIndex, onTap: onTap),
-          _NavIcon(icon: Icons.settings_rounded, index: 4, selectedIndex: selectedIndex, onTap: onTap),
-        ],
+            _NavIcon(icon: Icons.notifications_rounded, index: 3, selectedIndex: selectedIndex, onTap: onTap, label: labels[3]),
+            _NavIcon(icon: Icons.settings_rounded, index: 4, selectedIndex: selectedIndex, onTap: onTap, label: labels[4]),
+          ],
+        ),
       ),
     );
   }
@@ -195,18 +218,26 @@ class _NavIcon extends StatelessWidget {
   final int index;
   final int selectedIndex;
   final void Function(int) onTap;
-  _NavIcon({required this.icon, required this.index, required this.selectedIndex, required this.onTap});
+  final String label;
+  _NavIcon({required this.icon, required this.index, required this.selectedIndex, required this.onTap, required this.label});
 
   @override
   Widget build(BuildContext context) {
     final bool active = index == selectedIndex;
-    return InkWell(
-      onTap: () => onTap(index),
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: EdgeInsets.all(6),
-        child: Icon(icon, size: 26, color: active ? Theme.of(context).primaryColor : Colors.white54),
-      ),
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => onTap(index),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: EdgeInsets.all(6),
+            child: Icon(icon, size: 26, color: active ? Theme.of(context).primaryColor : Colors.white54),
+          ),
+        ),
+        Text(label, style: TextStyle(color: active ? Theme.of(context).primaryColor : Colors.white54, fontSize: 12)),
+      ],
     );
   }
 }
+
+// Removed custom floating bottom nav, now using BottomNavigationBar

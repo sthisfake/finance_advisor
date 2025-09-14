@@ -86,7 +86,7 @@ class QuickReplies extends StatelessWidget {
   QuickReplies({required this.onPick, required this.lastBotOptions});
   @override
   Widget build(BuildContext context) {
-    final options = lastBotOptions.isNotEmpty ? lastBotOptions : ['See summary','Add reminder','Categorize txns','Help'];
+  final options = lastBotOptions.isNotEmpty ? lastBotOptions : ['مشاهده خلاصه','افزودن یادآور','دسته‌بندی تراکنش‌ها','راهنما'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(children: options.map((o) => Padding(padding: EdgeInsets.only(right:8), child: InkWell(onTap: ()=>onPick(o), child: Container(padding: EdgeInsets.symmetric(horizontal:14, vertical:10), decoration: BoxDecoration(color: Color(0xFF0F2236), borderRadius: BorderRadius.circular(999)), child: Text(o, style: TextStyle(color: Colors.white70)))))).toList()),

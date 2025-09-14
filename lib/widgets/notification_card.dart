@@ -23,13 +23,13 @@ class NotificationCard extends StatelessWidget {
             children: [
               Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
               SizedBox(height:6),
-              Text(dueIn<0? 'Overdue ${-dueIn}d' : 'Due in ${dueIn}d', style: TextStyle(color: Colors.white54))
+              Text(dueIn<0? 'موعد گذشته ${-dueIn} روز' : 'تا موعد ${dueIn} روز', style: TextStyle(color: Colors.white54))
             ]
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal:12,vertical:8),
             decoration: BoxDecoration(color: tagColor, borderRadius: BorderRadius.circular(8)),
-            child: Text(dueIn<0? 'Overdue' : 'Upcoming')
+            child: Text(dueIn<0? 'موعد گذشته' : 'آتی')
           )
         ]
       ),

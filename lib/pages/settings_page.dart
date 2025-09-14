@@ -5,18 +5,18 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 80), // bottom padding for menu
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Settings', style: TextStyle(fontSize:22,fontWeight: FontWeight.w700)),
+            Text('تنظیمات', style: TextStyle(fontSize:22,fontWeight: FontWeight.w700)),
             SizedBox(height:12),
-            ListTile(title: Text('Dark mode'), trailing: Switch(value: true, onChanged: (v){})),
-            ListTile(title: Text('Notifications'), trailing: Switch(value: true, onChanged: (v){})),
+            ListTile(title: Text('حالت تاریک'), trailing: Switch(value: true, onChanged: (v){})),
+            ListTile(title: Text('اعلان‌ها'), trailing: Switch(value: true, onChanged: (v){})),
             SizedBox(height:12),
-            Text('About'),
+            Text('درباره'),
             SizedBox(height:8),
-            Text('MVP Finance Advisor – built with love.')
+            Text('مشاور مالی نسخه MVP – ساخته شده با عشق.')
           ],
         ),
       ),

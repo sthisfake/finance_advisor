@@ -6,11 +6,11 @@ class NotificationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 80), // bottom padding for menu
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Notifications', style: TextStyle(fontSize:22,fontWeight: FontWeight.w700)),
+            Text('اعلان‌ها', style: TextStyle(fontSize:22,fontWeight: FontWeight.w700)),
             SizedBox(height:12),
             Expanded(
               child: ListView(children: [
